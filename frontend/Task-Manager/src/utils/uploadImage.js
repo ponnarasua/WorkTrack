@@ -1,5 +1,6 @@
 import { API_PATHS } from './apiPaths';
 import axiosInstance from './axiosInstance';
+import logger from './logger';
 
 const uploadImage = async (imageFile) => {
     const formData = new FormData();
@@ -14,7 +15,7 @@ const uploadImage = async (imageFile) => {
         });
         return response.data;
     }catch(error){
-        console.error("Error uploading image:", error);
+        logger.error("Error uploading image:", error);
         throw error;
     }
 };

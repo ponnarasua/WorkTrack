@@ -1,5 +1,5 @@
 const express = require('express')
-const { registerUser, loginUser, getUserProfile, updateUserProfile } = require('../controllers/authController');
+const { registerUser, loginUser, getUserProfile, updateUserProfile, logoutUser } = require('../controllers/authController');
 const { 
     sendRegistrationOTPHandler,
     verifyRegistrationOTPHandler,
@@ -25,6 +25,7 @@ const router = express.Router();
 // Auth Routes (Legacy - kept for backward compatibility)
 router.post('/register', registerLimiter, validateRegistration, registerUser);
 router.post('/login', loginLimiter, validateLogin, loginUser);
+router.post('/logout', protect, logoutUser);
 
 // OTP-based Registration Routes
 router.post('/send-registration-otp', registerLimiter, validateRegistration, sendRegistrationOTPHandler);

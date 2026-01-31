@@ -564,7 +564,7 @@ const addComment = async (req, res) => {
                         task.title,
                         text.trim(),
                         buildTaskUrl(task._id)
-                    ).catch(err => console.error('Error sending mention notification:', err));
+                    ).catch(err => logger.error('Error sending mention notification:', err));
                 }
             });
         }

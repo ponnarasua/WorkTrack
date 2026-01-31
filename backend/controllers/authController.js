@@ -30,7 +30,18 @@ const registerUser = async (req , res) => {
         }
         // Service call
         const user = await registerUserService(req.body);
-        res.status(HTTP_STATUS.CREATED).json(user);
+        
+        // Set httpOnly cookie with token
+        res.cookie('token', user.token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+        
+        // Remove token from response body
+        const { token, ...userWithoutToken } = user;
+        res.status(HTTP_STATUS.CREATED).json(userWithoutToken);
     } catch (error) {
         if (error.message && error.message.includes('Registration is only allowed')) {
             return sendError(res, error.message, HTTP_STATUS.FORBIDDEN);
@@ -64,14 +75,24 @@ const loginUser = async (req , res)=>{
             return res.status(401).json({message: 'Wrong password'});
         }
 
-        // Return user data with JWT
+        // Generate token
+        const token = generateToken(user);
+        
+        // Set httpOnly cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
+
+        // Return user data (without token in response body)
         res.json({
             id: user.id,
             name: user.name,
             email: user.email,
             profileImageUrl: user.profileImageUrl,
             role: user.role,
-            token: generateToken(user),
         });
     } catch(error){
         sendError(res, 'Server error', 500, error);
@@ -112,6 +133,17 @@ const updateUserProfile = async (req , res)=>{
         }
 
         const updatedUser = await user.save();
+        
+        // Generate new token
+        const token = generateToken(updatedUser);
+        
+        // Set httpOnly cookie
+        res.cookie('token', token, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
+            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        });
 
         res.json({
             _id: updatedUser._id,
@@ -119,11 +151,28 @@ const updateUserProfile = async (req , res)=>{
             email: updatedUser.email,
             profileImageUrl: updatedUser.profileImageUrl,
             role: updatedUser.role,
-            token: generateToken(updatedUser),
         });
     } catch(error){
         sendError(res, 'Server error', 500, error);
     }
 };
 
-module.exports = {registerUser,loginUser,getUserProfile,updateUserProfile};
+// @desc Logout user
+// @route POST /api/auth/logout
+// @access Private
+const logoutUser = async (req, res) => {
+    try {
+        // Clear the httpOnly cookie
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict'
+        });
+        
+        res.json({ message: 'Logged out successfully' });
+    } catch (error) {
+        sendError(res, 'Server error', 500, error);
+    }
+};
+
+module.exports = {registerUser,loginUser,logoutUser,getUserProfile,updateUserProfile};

@@ -3,6 +3,7 @@ export const API_PATHS = {
     AUTH: {
         REGISTER: '/api/auth/register',
         LOGIN: '/api/auth/login',
+        LOGOUT: '/api/auth/logout',
         GET_PROFILE: '/api/auth/profile',
         SEND_REGISTRATION_OTP: '/api/auth/send-registration-otp',
         VERIFY_REGISTRATION_OTP: '/api/auth/verify-registration-otp',

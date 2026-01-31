@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LuClipboardCheck, LuUsers, LuMessageCircle, LuTag, LuSquarePlus, LuSettings } from 'react-icons/lu';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/apiPaths';
+import logger from '../utils/logger';
 import moment from 'moment';
 
 const activityIcons = {
@@ -47,7 +48,7 @@ const ActivityLog = ({ taskId }) => {
             );
             setActivities(sortedActivities);
         } catch (error) {
-            console.error('Error fetching activity log:', error);
+            logger.error('Error fetching activity log:', error);
         } finally {
             setLoading(false);
         }

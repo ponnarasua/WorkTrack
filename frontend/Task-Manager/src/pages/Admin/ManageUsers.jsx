@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import axiosInstance from '../../utils/axiosInstance'
 import { API_PATHS } from '../../utils/apiPaths'
+import logger from '../../utils/logger';
 import { LuFileSpreadsheet } from 'react-icons/lu'
 import UserCard from '../../components/Cards/UserCard'
 import toast from 'react-hot-toast';
@@ -16,7 +17,7 @@ const ManageUsers = () => {
         setAllUsers(response.data);
       }
     } catch (error) {
-      console.error("Error in Get All Users", error);
+      logger.error("Error in Get All Users", error);
     }
   }
 
@@ -37,7 +38,7 @@ const ManageUsers = () => {
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Error in Download expensive details", error);
+      logger.error("Error in Download expensive details", error);
       toast.error("Error in Download expensive details");
     }
   }

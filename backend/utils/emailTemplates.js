@@ -42,7 +42,7 @@ const getHeader = (title, gradient = 'linear-gradient(135deg, #fc4a1a 0%, #f7b73
 const getFooter = (customText = 'This is an automated email. Please do not reply.') => `
     <div class="footer">
         <p>${customText}</p>
-        <p>&copy; ${getCurrentYear()} Task Manager. All rights reserved.</p>
+        <p>&copy; ${getCurrentYear()} Work Track. All rights reserved.</p>
     </div>
 `;
 

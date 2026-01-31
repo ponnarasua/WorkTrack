@@ -9,6 +9,7 @@ import {
 } from 'react-icons/lu';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/apiPaths';
+import logger from '../utils/logger';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 const ProductivityStats = ({ className = "" }) => {
@@ -26,7 +27,7 @@ const ProductivityStats = ({ className = "" }) => {
       });
       setStats(response.data);
     } catch (err) {
-      console.error('Error fetching productivity stats:', err);
+      logger.error('Error fetching productivity stats:', err);
       setError('Failed to load productivity stats');
     } finally {
       setLoading(false);

@@ -3,6 +3,7 @@ import { UserContext } from '../context/userContext';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/apiPaths';
 import uploadImage from '../utils/uploadImage';
+import logger from '../utils/logger';
 import toast from 'react-hot-toast';
 
 /**
@@ -39,7 +40,7 @@ export const useProfileEdit = () => {
           const imgUploadRes = await uploadImage(editProfilePic);
           profileImageUrl = imgUploadRes.imageUrl || '';
         } catch (uploadError) {
-          console.error('Image upload failed:', uploadError);
+          logger.error('Image upload failed:', uploadError);
           toast.error('Image upload failed. Updating name only.');
           // Continue with name update even if image upload fails
         }
@@ -60,7 +61,7 @@ export const useProfileEdit = () => {
       setEditProfilePic(null);
       setProfilePicPreview(null);
     } catch (error) {
-      console.error('Profile update error:', error);
+      logger.error('Profile update error:', error);
       toast.error(error.response?.data?.message || 'Failed to update profile');
     } finally {
       setIsLoading(false);

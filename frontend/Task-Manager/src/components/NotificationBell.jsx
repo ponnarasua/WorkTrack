@@ -3,6 +3,7 @@ import { LuBell, LuBellRing, LuCheck, LuCheckCheck, LuTrash2, LuX } from 'react-
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/apiPaths';
+import logger from '../utils/logger';
 import moment from 'moment';
 
 const NotificationBell = () => {
@@ -44,7 +45,7 @@ const NotificationBell = () => {
             const response = await axiosInstance.get(API_PATHS.NOTIFICATIONS.GET_UNREAD_COUNT);
             setUnreadCount(response.data.unreadCount);
         } catch (error) {
-            console.error('Error fetching unread count:', error);
+            logger.error('Error fetching unread count:', error);
         }
     };
 
@@ -57,7 +58,7 @@ const NotificationBell = () => {
             setNotifications(response.data.notifications);
             setUnreadCount(response.data.unreadCount);
         } catch (error) {
-            console.error('Error fetching notifications:', error);
+            logger.error('Error fetching notifications:', error);
         } finally {
             setLoading(false);
         }
@@ -71,7 +72,7 @@ const NotificationBell = () => {
             );
             setUnreadCount(prev => Math.max(0, prev - 1));
         } catch (error) {
-            console.error('Error marking as read:', error);
+            logger.error('Error marking as read:', error);
         }
     };
 
@@ -81,7 +82,7 @@ const NotificationBell = () => {
             setNotifications(prev => prev.map(n => ({ ...n, isRead: true })));
             setUnreadCount(0);
         } catch (error) {
-            console.error('Error marking all as read:', error);
+            logger.error('Error marking all as read:', error);
         }
     };
 
@@ -95,7 +96,7 @@ const NotificationBell = () => {
                 setUnreadCount(prev => Math.max(0, prev - 1));
             }
         } catch (error) {
-            console.error('Error deleting notification:', error);
+            logger.error('Error deleting notification:', error);
         }
     };
 

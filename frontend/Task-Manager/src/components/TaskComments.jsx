@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { LuSend, LuTrash2, LuMessageCircle } from 'react-icons/lu';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/apiPaths';
+import logger from '../utils/logger';
 import { UserContext } from '../context/userContext';
 import MentionInput from './Inputs/MentionInput';
 import moment from 'moment';
@@ -48,17 +49,17 @@ const TaskComments = ({ taskId }) => {
     const [loading, setLoading] = useState(false);
     const [submitting, setSubmitting] = useState(false);
 
-    const fetchComments = async () => {
+    const fetchComments = useCallback(async () => {
         try {
             setLoading(true);
             const response = await axiosInstance.get(API_PATHS.TASKS.GET_COMMENTS(taskId));
             setComments(response.data.comments || []);
         } catch (error) {
-            console.error('Error fetching comments:', error);
+            logger.error('Error fetching comments:', error);
         } finally {
             setLoading(false);
         }
-    };
+    }, [taskId]);
 
     const handleMentionsChange = useCallback((mentionIds) => {
         setMentions(mentionIds);
@@ -78,7 +79,7 @@ const TaskComments = ({ taskId }) => {
             setNewComment('');
             setMentions([]);
         } catch (error) {
-            console.error('Error adding comment:', error);
+            logger.error('Error adding comment:', error);
         } finally {
             setSubmitting(false);
         }
@@ -91,7 +92,7 @@ const TaskComments = ({ taskId }) => {
             await axiosInstance.delete(API_PATHS.TASKS.DELETE_COMMENT(taskId, commentId));
             setComments(comments.filter(c => c._id !== commentId));
         } catch (error) {
-            console.error('Error deleting comment:', error);
+            logger.error('Error deleting comment:', error);
         }
     };
 
@@ -99,7 +100,7 @@ const TaskComments = ({ taskId }) => {
         if (taskId) {
             fetchComments();
         }
-    }, [taskId]);
+    }, [taskId, fetchComments]);
 
     return (
         <div className="mt-6">

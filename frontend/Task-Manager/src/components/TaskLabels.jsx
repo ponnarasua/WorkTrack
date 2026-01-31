@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { LuTag, LuX, LuPlus } from 'react-icons/lu';
 import axiosInstance from '../utils/axiosInstance';
 import { API_PATHS } from '../utils/apiPaths';
+import logger from '../utils/logger';
 import { UserContext } from '../context/userContext';
 import { getLabelColor, SUGGESTED_LABELS } from '../utils/colors';
 
@@ -36,7 +37,7 @@ const TaskLabels = ({ taskId, initialLabels = [], onLabelsChange, readOnly = fal
             const response = await axiosInstance.get(API_PATHS.TASKS.GET_ALL_LABELS);
             setAllLabels(response.data.labels || []);
         } catch (error) {
-            console.error('Error fetching labels:', error);
+            logger.error('Error fetching labels:', error);
         }
     };
 
@@ -69,7 +70,7 @@ const TaskLabels = ({ taskId, initialLabels = [], onLabelsChange, readOnly = fal
             setShowSuggestions(false);
             if (onLabelsChange) onLabelsChange(updatedLabels);
         } catch (error) {
-            console.error('Error adding label:', error);
+            logger.error('Error adding label:', error);
         } finally {
             setLoading(false);
         }
@@ -83,7 +84,7 @@ const TaskLabels = ({ taskId, initialLabels = [], onLabelsChange, readOnly = fal
             setLabels(updatedLabels);
             if (onLabelsChange) onLabelsChange(updatedLabels);
         } catch (error) {
-            console.error('Error removing label:', error);
+            logger.error('Error removing label:', error);
         } finally {
             setLoading(false);
         }

@@ -10,10 +10,8 @@ const axiosInstance = axios.create({
 //Request Interceptor
 axiosInstance.interceptors.request.use(
     (config) => {
-        const accessToken = localStorage.getItem('token');
-        if(accessToken){
-            config.headers.Authorization = `Bearer ${accessToken}`;
-        }
+        // Cookies are automatically sent with withCredentials: true
+        // No need to manually add Authorization header
         return config;
     
 },

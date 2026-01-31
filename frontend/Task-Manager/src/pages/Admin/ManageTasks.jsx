@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
+import logger from '../../utils/logger';
 import { API_PATHS } from '../../utils/apiPaths';
 import { LuFileSpreadsheet, LuPlus, LuFileText } from 'react-icons/lu';
 import TaskStatusTabs from '../../components/TaskStatusTabs';
@@ -29,7 +30,7 @@ const ManageTasks = () => {
       const response = await axiosInstance.get(API_PATHS.USERS.GET_ALL_USERS);
       setUsers(response.data || []);
     } catch (error) {
-      console.error("Error fetching users", error);
+      logger.error("Error fetching users", error);
     }
   };
 
@@ -53,7 +54,7 @@ const ManageTasks = () => {
 
       setTabs(statusArray);
     } catch (error) {
-      console.error("Error fetching tasks", error);
+      logger.error("Error fetching tasks", error);
     }
   };
 
@@ -121,7 +122,7 @@ const ManageTasks = () => {
       link.parentNode.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error("Error in Download expensive details", error);
+      logger.error("Error in Download expensive details", error);
       toast.error("Error in Download expense details. Please try again.");
     }
   };
@@ -133,7 +134,7 @@ const ManageTasks = () => {
       toast.success("Task duplicated successfully!");
       getAllTasks(); // Refresh the task list
     } catch (error) {
-      console.error("Error duplicating task", error);
+      logger.error("Error duplicating task", error);
       toast.error(error.response?.data?.message || "Failed to duplicate task");
     }
   };
@@ -155,7 +156,7 @@ const ManageTasks = () => {
       window.URL.revokeObjectURL(url);
       toast.success("PDF downloaded successfully!");
     } catch (error) {
-      console.error("Error downloading PDF", error);
+      logger.error("Error downloading PDF", error);
       toast.error("Failed to download PDF report");
     }
   };
@@ -176,7 +177,7 @@ const ManageTasks = () => {
       const response = await axiosInstance.get(API_PATHS.TASKS.SEARCH_TASKS, { params });
       setAllTasks(response.data?.tasks || []);
     } catch (error) {
-      console.error("Error searching tasks", error);
+      logger.error("Error searching tasks", error);
       toast.error("Search failed. Please try again.");
     } finally {
       setIsSearching(false);

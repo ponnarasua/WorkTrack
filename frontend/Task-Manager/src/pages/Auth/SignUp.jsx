@@ -103,16 +103,14 @@ const SignUp = () => {
         otp,
       });
 
-      const { token, user } = response.data;
+      const { user } = response.data;
 
-      if (token) {
-        localStorage.setItem('token', token);
-        updateUser(user);
-        if (user.role === 'admin') {
-          navigate('/admin/dashboard');
-        } else {
-          navigate('/user/dashboard');
-        }
+      // Token is now in httpOnly cookie
+      updateUser(user);
+      if (user.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate('/user/dashboard');
       }
     } catch (error) {
       if (error.response && error.response.data.message) {

@@ -39,18 +39,16 @@ const Login = () => {
       },{
         withCredentials: true,
       });
-      const { token, role } = response.data;
+      const { role } = response.data;
 
-      if(token){
-        localStorage.setItem('token', token);
-        updateUser(response.data);
+      // Token is now in httpOnly cookie, no need to store in localStorage
+      updateUser(response.data);
 
-        // Redirect based on role
-        if(role === 'admin'){
-          navigate('/admin/dashboard');
-        }else{
-          navigate('/user/dashboard');
-        }
+      // Redirect based on role
+      if(role === 'admin'){
+        navigate('/admin/dashboard');
+      }else{
+        navigate('/user/dashboard');
       }
     }catch(error){
       if(error.response && error.response.data.message){

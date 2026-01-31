@@ -68,10 +68,10 @@ const Navbar = ({activeMenu, toggleSidebar, sidebarOpen}) => {
                 )}
             </button>
             
-            <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>Task Manager</h2>
+            <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>Work Track</h2>
         </div>
         
-        {/* Right side - Notifications, Theme Toggle & Profile Avatar */}
+        {/* Right side - Notifications, Theme Toggle & Profile Avatar */
         <div className='flex items-center gap-4'>
             {/* Notification Bell */}
             <NotificationBell />

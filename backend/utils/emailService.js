@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const logger = require('../config/logger');
 const { 
     buildEmailTemplate, 
     getOTPBox, 
@@ -50,7 +51,7 @@ const sendRegistrationOTP = async (email, otp, name = 'User') => {
 
     const content = `
         <h2>Hello ${name},</h2>
-        <p>Thank you for registering with Task Manager. To complete your registration, please use the following OTP:</p>
+        <p>Thank you for registering with Work Track. To complete your registration, please use the following OTP:</p>
         ${getOTPBox(otp, '#667eea')}
         <p>If you didn't request this registration, please ignore this email.</p>
     `;
@@ -58,9 +59,9 @@ const sendRegistrationOTP = async (email, otp, name = 'User') => {
     const mailOptions = {
         from: getMailFrom(),
         to: email,
-        subject: 'Verify Your Email - Task Manager',
+        subject: 'Verify Your Email - Work Track',
         html: buildEmailTemplate({
-            headerTitle: 'Welcome to Task Manager!',
+            headerTitle: 'Welcome to Work Track!',
             headerGradient: GRADIENTS.purple,
             content,
         }),
@@ -68,10 +69,10 @@ const sendRegistrationOTP = async (email, otp, name = 'User') => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`Registration OTP sent to ${email}`);
+        logger.info(`Registration OTP sent to ${email}`);
         return { success: true };
     } catch (error) {
-        console.error('Error sending registration OTP:', error);
+        logger.error('Error sending registration OTP:', error);
         throw new Error('Failed to send OTP email');
     }
 };
@@ -95,7 +96,7 @@ const sendPasswordResetOTP = async (email, otp, name = 'User') => {
     const mailOptions = {
         from: getMailFrom(),
         to: email,
-        subject: 'Password Reset OTP - Task Manager',
+        subject: 'Password Reset OTP - Work Track',
         html: buildEmailTemplate({
             headerTitle: 'Password Reset Request',
             headerGradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
@@ -105,10 +106,10 @@ const sendPasswordResetOTP = async (email, otp, name = 'User') => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`Password reset OTP sent to ${email}`);
+        logger.info(`Password reset OTP sent to ${email}`);
         return { success: true };
     } catch (error) {
-        console.error('Error sending password reset OTP:', error);
+        logger.error('Error sending password reset OTP:', error);
         throw new Error('Failed to send OTP email');
     }
 };
@@ -133,7 +134,7 @@ const sendAccountDeletionOTP = async (email, otp, name = 'User') => {
     const mailOptions = {
         from: getMailFrom(),
         to: email,
-        subject: 'Account Deletion Verification - Task Manager',
+        subject: 'Account Deletion Verification - Work Track',
         html: buildEmailTemplate({
             headerTitle: 'Account Deletion Request',
             headerGradient: GRADIENTS.primary,
@@ -143,10 +144,10 @@ const sendAccountDeletionOTP = async (email, otp, name = 'User') => {
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`Account deletion OTP sent to ${email}`);
+        logger.info(`Account deletion OTP sent to ${email}`);
         return { success: true };
     } catch (error) {
-        console.error('Error sending account deletion OTP:', error);
+        logger.error('Error sending account deletion OTP:', error);
         throw new Error('Failed to send OTP email');
     }
 };
@@ -179,7 +180,7 @@ const sendMentionNotification = async (email, recipientName, mentionerName, task
     const mailOptions = {
         from: getMailFrom(),
         to: email,
-        subject: `${mentionerName} mentioned you in a comment - Task Manager`,
+        subject: `${mentionerName} mentioned you in a comment - Work Track`,
         html: buildEmailTemplate({
             headerTitle: 'You were mentioned!',
             headerGradient: GRADIENTS.purple,
@@ -190,10 +191,10 @@ const sendMentionNotification = async (email, recipientName, mentionerName, task
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`Mention notification sent to ${email}`);
+        logger.info(`Mention notification sent to ${email}`);
         return { success: true };
     } catch (error) {
-        console.error('Error sending mention notification:', error);
+        logger.error('Error sending mention notification:', error);
         // Don't throw - mention notifications are non-critical
         return { success: false, error: error.message };
     }
@@ -225,7 +226,7 @@ const sendDueDateReminder = async (email, recipientName, taskTitle, dueDate, pri
     const mailOptions = {
         from: getMailFrom(),
         to: email,
-        subject: `⏰ Reminder: "${taskTitle}" needs your attention - Task Manager`,
+        subject: `⏰ Reminder: "${taskTitle}" needs your attention - Work Track`,
         html: buildEmailTemplate({
             headerTitle: 'Task Deadline Reminder',
             headerGradient: GRADIENTS.warning,
@@ -237,10 +238,10 @@ const sendDueDateReminder = async (email, recipientName, taskTitle, dueDate, pri
 
     try {
         await transporter.sendMail(mailOptions);
-        console.log(`Due date reminder sent to ${email} for task: ${taskTitle}`);
+        logger.info(`Due date reminder sent to ${email} for task: ${taskTitle}`);
         return { success: true };
     } catch (error) {
-        console.error('Error sending due date reminder:', error);
+        logger.error('Error sending due date reminder:', error);
         return { success: false, error: error.message };
     }
 };

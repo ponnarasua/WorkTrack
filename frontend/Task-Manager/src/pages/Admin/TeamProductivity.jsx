@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { useUserAuth } from '../../hooks/useUserAuth';
+import logger from '../../utils/logger';
 import { 
   LuArrowRight, 
   LuCheck, 
@@ -36,7 +37,7 @@ const TeamProductivity = () => {
       });
       setStats(response.data);
     } catch (err) {
-      console.error('Error fetching team productivity stats:', err);
+      logger.error('Error fetching team productivity stats:', err);
       setError('Failed to load team productivity stats');
     } finally {
       setLoading(false);
@@ -88,7 +89,7 @@ const TeamProductivity = () => {
       
       toast.success(`Report downloaded successfully!`);
     } catch (err) {
-      console.error('Error exporting report:', err);
+      logger.error('Error exporting report:', err);
       toast.error('Failed to export report');
     } finally {
       setExporting(false);

@@ -22,7 +22,7 @@ const AuthLayout = ({ children }) => {
   return (
     <div className='flex h-screen bg-white dark:bg-gray-950'>
       <div className={`px-6 pt-8 pb-12 ${showImage ? 'w-full md:w-[60%]' : 'w-full'}`}>
-        <h2 className='text-lg font-medium text-gray-900 dark:text-white'>Task Manager</h2>
+        <h2 className='text-lg font-medium text-gray-900 dark:text-white'>Work Track</h2>
         {children}
       </div>
 
@@ -45,7 +45,7 @@ export default AuthLayout;
 //   return (
 //     <div className='flex'>
 //       <div className='w-screen h-screen md:w-[60wv] px-12 pt-8 pb-12'>
-//         <h2 className='text-lg font-medium text-black'>Task Manager</h2>
+//         <h2 className='text-lg font-medium text-black'>Work Track</h2>
 //         {children}
 //       </div>
 //       <div className="hidden md:flex w-[60vw] h-screen items-center justify-center bg-blue-50 bg-[url('/bg-img.png')] bg-cover bg-no-repeat bg-center overflow-hidden p-8">

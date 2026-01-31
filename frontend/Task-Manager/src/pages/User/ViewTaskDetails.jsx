@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import axiosInstance from '../../utils/axiosInstance'
 import { API_PATHS } from '../../utils/apiPaths'
+import logger from '../../utils/logger'
 import DashboardLayout from '../../components/layout/DashboardLayout'
 import moment from 'moment'
 import AvatarGroup from '../../components/AvatarGroup'
@@ -21,11 +22,11 @@ const ViewTaskDetails = () => {
   const navigate = useNavigate();
   const [task, setTask] = useState(null);
   const [sendingReminder, setSendingReminder] = useState(false);
-  const { user, loading } = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const isAdmin = user?.role === 'admin';
 
   // get Task info by ID
-  const getTaskDetailsByID = async () => {
+  const getTaskDetailsByID = useCallback(async () => {
     try {
       const response = await axiosInstance.get(API_PATHS.TASKS.GET_TASK_BY_ID(id));
 
@@ -34,9 +35,9 @@ const ViewTaskDetails = () => {
         setTask(taskInfo);
       }
     } catch (error) {
-      console.error("Error in getTaskDetailsByID", error);
+      logger.error("Error in getTaskDetailsByID", error);
     }
-  };
+  }, [id]);
 
   // handle todo check
   const updateTodoChecklist = async (index) => {
@@ -54,17 +55,18 @@ const ViewTaskDetails = () => {
           setTask(response.data?.task || task);
         }
         else{
-          // optionally recert the toggle if the API call fails.
+          // optionally revert the toggle if the API call fails.
           todoChecklist[index].completed = !todoChecklist[index].completed;
         }
       } catch (error) {
+        logger.error('Error updating todo checklist:', error);
         todoChecklist[index].completed = !todoChecklist[index].completed;
       }
     }
   };
 
 
-  // Handle attechment link lick
+  // Handle attachment link click
   const handleLinkClick = (link) => {
     if(!/^https?:\/\//i.test(link)) {
       link = "https://"+link;
@@ -81,7 +83,7 @@ const ViewTaskDetails = () => {
         toast.success(response.data.message || 'Reminder sent successfully!');
       }
     } catch (error) {
-      console.error('Error sending reminder:', error);
+      logger.error('Error sending reminder:', error);
       toast.error(error.response?.data?.message || 'Failed to send reminder');
     } finally {
       setSendingReminder(false);
@@ -93,7 +95,7 @@ const ViewTaskDetails = () => {
       getTaskDetailsByID();
     }
     return () => { };
-  }, [id]);
+  }, [id, getTaskDetailsByID]);
   return (
     <DashboardLayout activeMenu={isAdmin ? 'Manage Tasks' : 'My Tasks'}>
       <div className='mt-5'>

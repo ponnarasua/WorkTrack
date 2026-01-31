@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
+import logger from '../../utils/logger';
 
 const MentionInput = ({ 
     value, 
@@ -34,7 +35,7 @@ const MentionInput = ({
             );
             setSuggestions(response.data || []);
         } catch (error) {
-            console.error('Error searching users:', error);
+            logger.error('Error searching users:', error);
             setSuggestions([]);
         } finally {
             setLoading(false);

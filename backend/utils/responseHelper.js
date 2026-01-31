@@ -2,6 +2,7 @@
  * Response Helper Utilities
  * Standardizes API responses across all controllers
  */
+const logger = require('../config/logger');
 
 /**
  * Send a success response
@@ -32,7 +33,7 @@ const sendSuccess = (res, data = null, message = 'Success', statusCode = 200) =>
  */
 const sendError = (res, message = 'Internal Server Error', statusCode = 500, error = null) => {
     if (error) {
-        console.error(`[Error] ${message}:`, error.message || error);
+        logger.error(`[Error] ${message}:`, error.message || error);
     }
     return res.status(statusCode).json({ success: false, message });
 };

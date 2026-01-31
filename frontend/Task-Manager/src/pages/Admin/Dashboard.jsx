@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useUserAuth } from '../../hooks/useUserAuth';
 import { UserContext } from '../../context/userContext';
 import DashboardLayout from '../../components/layout/DashboardLayout';
+import logger from '../../utils/logger';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
@@ -58,7 +59,7 @@ const Dashboard = () => {
         prepareChartData(response.data?.charts || null);
       }
     } catch(error) {
-      console.error("Error fetching users", error);
+      logger.error("Error fetching users", error);
     }
   };
 

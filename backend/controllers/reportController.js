@@ -95,7 +95,7 @@ const exportTasksPDF = async (req, res) => {
 
         // ===== HEADER SECTION =====
         doc.rect(0, 0, doc.page.width, 80).fill(colors.primary);
-        doc.fontSize(28).fillColor('#ffffff').text('Task Manager', 40, 25, { continued: false });
+        doc.fontSize(28).fillColor('#ffffff').text('Work Track', 40, 25, { continued: false });
         doc.fontSize(12).fillColor('#ffffff').opacity(0.9).text('Tasks Report', 40, 55);
         doc.opacity(1);
         doc.fontSize(10).fillColor('#ffffff').text(
@@ -396,7 +396,7 @@ const exportTeamProductivity = async (req, res) => {
         const data = await getTeamProductivityData(req.user, period);
 
         const workbook = new excelJS.Workbook();
-        workbook.creator = 'Task Manager';
+        workbook.creator = 'Work Track';
         workbook.created = new Date();
         
         // ============ SUMMARY SHEET ============

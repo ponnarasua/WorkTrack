@@ -3,6 +3,7 @@ const Task = require('../models/Task');
 const Notification = require('../models/Notification');
 const { sendDueDateReminder } = require('./emailService');
 const { TASK_STATUS } = require('./constants');
+const logger = require('../config/logger');
 
 /**
  * Check for tasks due in the next 24 hours and send reminder emails
@@ -27,7 +28,7 @@ const checkDueDateReminders = async () => {
             reminderSent: { $ne: true }
         }).populate('assignedTo', 'name email');
 
-        console.log(`[Reminder Scheduler] Found ${tasksNeedingReminders.length} tasks needing reminders`);
+        logger.info(`[Reminder Scheduler] Found ${tasksNeedingReminders.length} tasks needing reminders`);
 
         for (const task of tasksNeedingReminders) {
             // Send reminder to each assigned user
@@ -57,7 +58,7 @@ const checkDueDateReminders = async () => {
                     );
                     return { success: true, email: user.email, userId: user._id };
                 } catch (error) {
-                    console.error(`[Reminder Scheduler] Failed to send reminder to ${user.email}:`, error.message);
+                    logger.error(`[Reminder Scheduler] Failed to send reminder to ${user.email}:`, error.message);
                     return { success: false, email: user.email, error: error.message };
                 }
             });
@@ -71,7 +72,7 @@ const checkDueDateReminders = async () => {
                     reminderSent: true,
                     reminderSentAt: new Date()
                 });
-                console.log(`[Reminder Scheduler] Sent ${successCount} reminders for task: "${task.title}"`);
+                logger.info(`[Reminder Scheduler] Sent ${successCount} reminders for task: "${task.title}"`);
             }
         }
 
@@ -80,7 +81,7 @@ const checkDueDateReminders = async () => {
             tasksProcessed: tasksNeedingReminders.length
         };
     } catch (error) {
-        console.error('[Reminder Scheduler] Error checking due date reminders:', error);
+        logger.error('[Reminder Scheduler] Error checking due date reminders:', error);
         return { success: false, error: error.message };
     }
 };
@@ -94,9 +95,9 @@ const initializeReminderScheduler = () => {
     // Cron pattern: minute hour day-of-month month day-of-week
     // '0 * * * *' = At minute 0 of every hour
     const schedule = cron.schedule('0 * * * *', async () => {
-        console.log('[Reminder Scheduler] Running due date reminder check...');
+        logger.info('[Reminder Scheduler] Running due date reminder check...');
         const result = await checkDueDateReminders();
-        console.log('[Reminder Scheduler] Check complete:', result);
+        logger.info('[Reminder Scheduler] Check complete:', result);
     }, {
         scheduled: true,
         timezone: process.env.TIMEZONE || 'UTC'
@@ -118,7 +119,7 @@ const initializeReminderScheduler = () => {
  * Manually trigger a reminder check (useful for testing or admin actions)
  */
 const triggerReminderCheck = async () => {
-    console.log('[Reminder Scheduler] Manual trigger initiated...');
+    logger.info('[Reminder Scheduler] Manual trigger initiated...');
     return await checkDueDateReminders();
 };
 

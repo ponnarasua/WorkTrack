@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { API_PATHS } from '../../utils/apiPaths';
 import axiosInstance from '../../utils/axiosInstance';
+import logger from '../../utils/logger';
 import { LuUsers } from 'react-icons/lu';
 import Modal from '../Modal';
 import AvatarGroup from '../AvatarGroup';
@@ -17,7 +18,7 @@ const SelectUsers = ({ selectedUsers, setSelectedUsers }) => {
         setAllUsers(response.data);
       }
     } catch (error) {
-      console.error("Error fetching Users", error);
+      logger.error("Error fetching Users", error);
     }
   };
 

@@ -1,7 +1,7 @@
 {
-  "name": "task-manager",
+  "name": "worktrack-backend",
   "version": "1.0.0",
-  "description": "Backend for task management application",
+  "description": "Backend for WorkTrack task management application",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -16,12 +16,14 @@
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
     "compression": "^1.8.1",
+    "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "exceljs": "^4.4.0",
     "express": "^5.1.0",
     "express-rate-limit": "^8.2.1",
     "express-validator": "^7.3.1",
+    "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.2",
@@ -29,7 +31,8 @@
     "node-cache": "^5.1.2",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.11",
-    "pdfkit": "^0.17.2"
+    "pdfkit": "^0.17.2",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

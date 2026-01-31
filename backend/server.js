@@ -1,11 +1,40 @@
 require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
+const helmet = require("helmet");
 const compression = require("compression");
+const cookieParser = require("cookie-parser");
 const path = require("path");
 const connectDB = require("./config/db");
+const logger = require("./config/logger");
 const { apiLimiter } = require("./middlewares/rateLimiter");
 const { initializeReminderScheduler } = require("./utils/reminderScheduler");
+
+// Validate required environment variables on startup
+const requiredEnvVars = [
+  'MONGO_URI',
+  'JWT_SECRET',
+  'PORT',
+  'EMAIL_HOST',
+  'EMAIL_PORT',
+  'EMAIL_USER',
+  'EMAIL_PASSWORD',
+  'CLOUDINARY_CLOUD_NAME',
+  'CLOUDINARY_API_KEY',
+  'CLOUDINARY_API_SECRET',
+  'FRONTEND_URL'
+];
+
+const missingEnvVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+if (missingEnvVars.length > 0) {
+  logger.error(`❌ Missing required environment variables: ${missingEnvVars.join(', ')}`);
+  logger.error('Please check your .env file and ensure all required variables are set.');
+  logger.error('Refer to ENVIRONMENT_VARIABLES_TEMPLATE.md for guidance.');
+  process.exit(1);
+}
+
+logger.info('✅ All required environment variables are present');
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -18,6 +47,19 @@ const app = express();
 // Trust proxy - required for apps behind reverse proxies (Render, Heroku, etc.)
 // This enables express-rate-limit to correctly identify clients by their IP
 app.set('trust proxy', 1);
+
+// Security headers with Helmet
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https://res.cloudinary.com"],
+    },
+  },
+  crossOriginEmbedderPolicy: false,
+}));
 
 // Compression middleware - reduces response sizes by ~70%
 app.use(compression({
@@ -57,6 +99,7 @@ app.use(
 );
 
 // Middleware
+app.use(cookieParser()); // Parse cookies
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -100,6 +143,16 @@ app.use((req, res, next) => {
 // 🔹 Global Error Handler
 app.use((err, req, res, next) => {
   const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
+  
+  // Log error
+  logger.error('Error occurred:', {
+    message: err.message,
+    stack: err.stack,
+    statusCode,
+    url: req.originalUrl,
+    method: req.method,
+  });
+  
   res.status(statusCode).json({
     success: false,
     message: err.message,
@@ -110,7 +163,8 @@ app.use((err, req, res, next) => {
 //Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server is running on port ${PORT}`);
+  logger.info(`🚀 Server is running on port ${PORT}`);
+  logger.info(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
   
   // Initialize the due date reminder scheduler
   initializeReminderScheduler();

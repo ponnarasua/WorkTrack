@@ -1,4 +1,4 @@
-# Environment Variables for TASKMANAGER Backend
+# Environment Variables for WORKTRACK Backend
 
 Below are all required environment variables for local development and production. Copy this template to your `.env` file and fill in the values as needed.
 

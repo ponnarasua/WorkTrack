@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../../utils/axiosInstance';
+import logger from '../../utils/logger';
 import { API_PATHS } from '../../utils/apiPaths';
 import { LuFileSpreadsheet } from 'react-icons/lu';
 import TaskStatusTabs from '../../components/TaskStatusTabs';
@@ -42,7 +43,7 @@ const MyTasks = () => {
 
       setTabs(statusArray);
     } catch (error) {
-      console.error("Error fetching tasks", error);
+      logger.error("Error fetching tasks", error);
     }
   };
 
@@ -105,7 +106,7 @@ const MyTasks = () => {
       const response = await axiosInstance.get(API_PATHS.TASKS.SEARCH_TASKS, { params });
       setAllTasks(response.data?.tasks || []);
     } catch (error) {
-      console.error("Error searching tasks", error);
+      logger.error("Error searching tasks", error);
       toast.error("Search failed. Please try again.");
     } finally {
       setIsSearching(false);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPaths';
+import logger from '../../utils/logger';
 import toast from 'react-hot-toast';
 import { useNavigate, useParams } from 'react-router-dom';
 import moment from 'moment';
@@ -93,7 +94,7 @@ const CreateTasks = () => {
       toast.success('Task Created Successfully');
       clearData();
     } catch (error) {
-      console.error('Error in Create Task', error);
+      logger.error('Error in Create Task', error);
     } finally {
       setLoading(false);
     }
@@ -127,7 +128,7 @@ const CreateTasks = () => {
       toast.success('Task Updated Successfully');
       navigate('/admin/tasks');
     } catch (error) {
-      console.error('Error in Update Task', error);
+      logger.error('Error in Update Task', error);
     } finally {
       setLoading(false);
     }
@@ -164,7 +165,7 @@ const CreateTasks = () => {
         });
       }
     } catch (error) {
-      console.error('Error fetching task by ID', error);
+      logger.error('Error fetching task by ID', error);
     }
   };
   
@@ -176,7 +177,7 @@ const CreateTasks = () => {
       toast.success('Expense details deleted successfully');
       navigate('/admin/tasks');
     }catch(error) {
-      console.error('Error in Delete Task', error);
+      logger.error('Error in Delete Task', error);
     }
   }
 
