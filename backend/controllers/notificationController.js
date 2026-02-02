@@ -1,4 +1,5 @@
 const { sendError, sendNotFound } = require('../utils/responseHelper');
+const logger = require('../config/logger');
 const {
     getNotificationsService,
     markAsReadService,
@@ -100,7 +101,7 @@ const createNotification = async (data) => {
         await notification.save();
         return notification;
     } catch (error) {
-        console.error('Error creating notification:', error);
+        logger.error('Error creating notification:', error);
         return null;
     }
 };

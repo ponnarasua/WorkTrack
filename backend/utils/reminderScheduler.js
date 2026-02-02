@@ -103,13 +103,13 @@ const initializeReminderScheduler = () => {
         timezone: process.env.TIMEZONE || 'UTC'
     });
 
-    console.log('[Reminder Scheduler] Initialized - running hourly checks for due date reminders');
+    logger.info('[Reminder Scheduler] Initialized - running hourly checks for due date reminders');
 
     // Also run immediately on startup to catch any pending reminders
     setTimeout(async () => {
-        console.log('[Reminder Scheduler] Running initial check on startup...');
+        logger.info('[Reminder Scheduler] Running initial check on startup...');
         const result = await checkDueDateReminders();
-        console.log('[Reminder Scheduler] Initial check complete:', result);
+        logger.info('[Reminder Scheduler] Initial check complete:', result);
     }, 5000); // Wait 5 seconds after server start
 
     return schedule;

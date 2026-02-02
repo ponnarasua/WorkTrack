@@ -10,22 +10,33 @@ const UserProvider = ({children}) => {
     const [loading,setLoading] = useState(true);
 
     useEffect(() => {
-        if(user) return;
-
+        let isMounted = true; // Prevent state updates on unmounted component
+        
         // Token is in httpOnly cookie, just try to fetch user
         const fetchUser = async () => {
             try{
                 const response = await axiosInstance.get(API_PATHS.AUTH.GET_PROFILE);
-                setUser(response.data);
+                if (isMounted) {
+                    setUser(response.data);
+                }
             }catch(error){
-                logger.error("User not authenticated", error);
-                // Cookie will be invalid/expired, no action needed
+                // Only log if it's not a 401 (which is expected when not logged in)
+                if (error.response?.status !== 401) {
+                    logger.error("Error fetching user profile", error);
+                }
+                // 401 is expected when not logged in, no action needed
             }finally{
-                setLoading(false);
+                if (isMounted) {
+                    setLoading(false);
+                }
             }
         };
         fetchUser();
-    }, [user]);
+        
+        return () => {
+            isMounted = false; // Cleanup on unmount
+        };
+    }, []); // Empty dependency array - only run once on mount
 
     const updateUser = (userData) => {
         setUser(userData);

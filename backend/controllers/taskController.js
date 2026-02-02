@@ -1,5 +1,6 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
+const logger = require('../config/logger');
 const { sendMentionNotification } = require('../utils/emailService');
 const { triggerReminderCheck } = require('../utils/reminderScheduler');
 const { createNotification } = require('./notificationController');
@@ -138,7 +139,7 @@ const getTaskById = async (req, res) => {
 
         res.json(task);
     } catch (error) {
-        console.error('❌ Error in getTaskById:', error);
+        logger.error('❌ Error in getTaskById:', error);
         sendError(res, 'Server error', 500, error);
     }
 };
@@ -784,7 +785,7 @@ const sendTaskReminder = async (req, res) => {
                 );
                 sentCount++;
             } catch (error) {
-                console.error(`Failed to send reminder to ${user.email}:`, error.message);
+                logger.error(`Failed to send reminder to ${user.email}:`, error.message);
             }
         }
 

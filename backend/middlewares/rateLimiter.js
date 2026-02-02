@@ -32,6 +32,14 @@ const apiLimiter = rateLimit({
     },
     standardHeaders: true,
     legacyHeaders: false,
+    // Skip rate limiting for profile endpoint during development
+    skip: (req) => {
+        // Skip profile endpoint to avoid blocking during development
+        if (req.path === '/auth/profile' && process.env.NODE_ENV === 'development') {
+            return true;
+        }
+        return false;
+    }
 });
 
 // Strict rate limiter for sensitive operations

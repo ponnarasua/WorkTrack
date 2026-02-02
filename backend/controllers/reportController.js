@@ -2,6 +2,7 @@ const Task = require('../models/Task');
 const User = require('../models/User');
 const excelJS = require('exceljs');
 const PDFDocument = require('pdfkit');
+const logger = require('../config/logger');
 const { getOrgDomain, isPublicDomain, buildOrgEmailRegex } = require('../utils/domainHelper');
 const { sendError, sendForbidden } = require('../utils/responseHelper');
 
@@ -931,7 +932,7 @@ const exportTeamProductivityPDF = async (req, res) => {
         doc.end();
 
     } catch (error) {
-        console.error('PDF Export Error:', error);
+        logger.error('PDF Export Error:', error);
         if (!res.headersSent) {
             sendError(res, 'Error exporting team productivity PDF', 500, error);
         }

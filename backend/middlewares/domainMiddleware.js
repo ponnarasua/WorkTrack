@@ -3,6 +3,7 @@
  * Handles organization domain validation and restrictions
  */
 
+const logger = require('../config/logger');
 const { isPublicDomain, getOrgDomain } = require('../utils/domainHelper');
 const { sendForbidden } = require('../utils/responseHelper');
 
@@ -61,7 +62,7 @@ const matchOrgDomain = (getResourceEmail) => {
                 return sendForbidden(res, 'Access denied. Resource belongs to a different organization.');
             }
         } catch (error) {
-            console.error('Domain match error:', error);
+            logger.error('Domain match error:', error);
             return sendForbidden(res, 'Unable to verify organization access');
         }
     };

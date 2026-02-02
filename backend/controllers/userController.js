@@ -1,5 +1,6 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
+const logger = require('../config/logger');
 const { getOrgDomain, isPublicDomain } = require('../utils/domainHelper');
 const { sendError, sendNotFound, sendForbidden } = require('../utils/responseHelper');
 const { isAdmin } = require('../utils/authHelper');
@@ -76,7 +77,7 @@ const updateUser = async (req, res) => {
         res.json({ message: "Profile updated successfully", user: updatedUser });
 
     } catch (error) {
-        console.error('Update user error:', error);
+        logger.error('Update user error:', error);
         sendError(res, 'Server error', 500, error);
     }
 };
@@ -142,7 +143,7 @@ const searchUsers = async (req, res) => {
         res.json(users);
 
     } catch (error) {
-        console.error('Search users error:', error);
+        logger.error('Search users error:', error);
         sendError(res, 'Server error', 500, error);
     }
 };

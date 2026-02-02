@@ -29,8 +29,15 @@ axiosInstance.interceptors.response.use(
         // Handle common errors globally
         if(error.response){
             if(error.response.status === 401){
-                // Redirect to login page
-                window.location.href = '/login';
+                // Only redirect to login if not already on auth pages and not the profile check
+                const currentPath = window.location.pathname;
+                const isAuthPage = currentPath === '/login' || currentPath === '/signup' || currentPath === '/forgot-password';
+                const isProfileCheck = error.config?.url?.includes('/auth/profile');
+                
+                // Don't redirect if on auth page or if it's just a profile check failing
+                if (!isAuthPage && !isProfileCheck) {
+                    window.location.href = '/login';
+                }
             }else if(error.response.status === 500){
                 // Handle server error
                 toast.error('Internal server error. Please try again later.');
